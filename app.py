@@ -42,8 +42,11 @@ def model_predict(img_path):
     plt.savefig(gpath); plt.close()
     return label, conf, rec, gpath
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    if request.method == 'POST':
+        # handle file upload + prediction
+        ...
     return render_template('index.html')
 
 @app.route('/how')
