@@ -14,6 +14,7 @@ import os                     # To work with directories and paths
 import numpy as np            # For handling arrays and numbers
 from tensorflow.keras.models import load_model  # Load Keras model
 from tensorflow.keras.preprocessing import image # Preprocess images
+import time                   # To add delays
 import matplotlib.pyplot as plt # For plotting prediction confidence graphs
 from werkzeug.utils import secure_filename  # Safely handle filenames
 
@@ -238,6 +239,7 @@ def page_not_found(e):
 # Run Flask app
 # -----------------------------------------------------------
 if __name__ == '__main__':
+    time.sleep(15)
     print("🌱 Starting LeafScan server at http://127.0.0.1:5000")
     print("💡 Stop the server anytime with CTRL + C")
     port = int(os.environ.get("PORT", 5000))
