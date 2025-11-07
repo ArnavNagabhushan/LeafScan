@@ -1,7 +1,7 @@
-Flask
+flask
 tensorflow
 gunicorn
-Pillow
+pillow
 numpy
 opencv-python
 matplotlib
