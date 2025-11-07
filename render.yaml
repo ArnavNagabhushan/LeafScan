@@ -2,6 +2,6 @@ services:
   - type: web
     name: leafscan
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
     plan: free
+    buildCommand: pip install --upgrade pip && pip install gdown && pip install -r requirements.txt
+    startCommand: gunicorn app:app
