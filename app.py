@@ -44,9 +44,6 @@ def model_predict(img_path):
 
 def home():
     if request.method == 'POST':
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    if request.method == 'POST':
         # 1️⃣ Get uploaded file
         file = request.files['file']
         if not file:
@@ -131,6 +128,5 @@ def not_found(e):
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    time.sleep(5)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
