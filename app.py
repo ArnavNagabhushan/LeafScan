@@ -42,11 +42,40 @@ def model_predict(img_path):
     plt.savefig(gpath); plt.close()
     return label, conf, rec, gpath
 
+def home():
+    if request.method == 'POST':
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        # handle file upload + prediction
-        ...
+        # 1️⃣ Get uploaded file
+        file = request.files['file']
+        if not file:
+            return "No file uploaded", 400
+
+        # 2️⃣ Save it temporarily
+        filepath = os.path.join('static', 'uploads', file.filename)
+        file.save(filepath)
+
+        # 3️⃣ Load model (download from Drive if needed)
+        model_path = "model.h5"
+        if not os.path.exists(model_path):
+            gdown.download("https://drive.google.com/uc?id=1ANsJOrCuHeUIB3jVwbCstVcIakak08_e", model_path, quiet=False)
+
+        model = tf.keras.models.load_model(model_path)
+
+        # 4️⃣ Preprocess the image
+        img = cv2.imread(filepath)
+        img = cv2.resize(img, (128, 128))
+        img = img / 255.0
+        img = np.expand_dims(img, axis=0)
+
+        # 5️⃣ Make prediction
+        pred = model.predict(img)
+        result = np.argmax(pred)
+
+        # 6️⃣ Render result page
+        return render_template('result.html', result=result, image=file.filename)
+
     return render_template('index.html')
 
 @app.route('/how')
