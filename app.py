@@ -126,7 +126,7 @@ def predict():
 
 @app.errorhandler(404)
 def not_found(e):
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
