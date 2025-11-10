@@ -42,6 +42,7 @@ def model_predict(img_path):
     plt.savefig(gpath); plt.close()
     return label, conf, rec, gpath
 
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         # 1️⃣ Get uploaded file
