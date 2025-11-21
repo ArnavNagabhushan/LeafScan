@@ -9,17 +9,17 @@
 
   <!-- Header -->
   <header>
-    <a href="index.html" class="logo-link">
-      <img src="logo.png" alt="LeafScan Logo">
+    <a href="/" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="how.html">📘 Learn</a>
-      <a href="results.html">🧠 Results</a>
-      <a href="faq.html">❓ FAQs</a>
-      <a href="team.html">👥 Team</a>
-      <a href="feedback.html">💬 Feedback</a>
+      <a href="/">🏠 Home</a>
+      <a href="/how">📘 Learn</a>
+      <a href="/results">🧠 Results</a>
+      <a href="/faq">❓ FAQs</a>
+      <a href="/team">👥 Team</a>
+      <a href="/feedback">💬 Feedback</a>
     </nav>
   </header>
 
@@ -32,18 +32,18 @@
     <h3>🩺 Prediction Results</h3>
 
     <p><b>Disease Predicted:</b> {{ label }}</p>
-    <p><b>Confidence:</b> {{ confidence }} %</p>
-    <p><b>Recommendation:</b> {{ recommendation }}</p>
+    <p><b>Confidence:</b> {{ conf }} %</p>
+    <p><b>Recommendation:</b> {{ rec }}</p>
 
-    <img src="{{ url_for('static', filename='graphs/plot.png') }}" alt="Prediction Graph">
+    <img src="{{ graph_path }}" alt="Prediction Graph">
 
     <form action="/">
       <button type="submit">🔙 Back to Home</button>
     </form>
 
     <hr>
-    <p>Made with 💚 by Team B1052JR2 - Backend Developer: Arnav Nagabhushan</p>
+    <p>Made with 💚 by Team B1052JR2</p>
   </section>
-
+  
 </body>
 </html>

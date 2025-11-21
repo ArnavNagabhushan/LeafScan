@@ -1,132 +1,116 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
-import os, time, numpy as np, gdown, matplotlib.pyplot as plt
-from tensorflow.keras.models import load_model
+from flask import Flask, render_template, request
+import numpy as np
+import tensorflow as tf
 from tensorflow.keras.preprocessing import image
-from werkzeug.utils import secure_filename
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/uploads'
-GRAPH_FOLDER = 'static/graphs'
-MODEL_PATH = 'model/plant_model.h5'
-ALLOWED_EXT = {'png', 'jpg', 'jpeg'}
+model = tf.keras.models.load_model("model/plant_model.h5")
 
-for folder in [UPLOAD_FOLDER, GRAPH_FOLDER, 'model']:
-    os.makedirs(folder, exist_ok=True)
+classes = [
+    'Apple Scab', 'Apple Black Rot', 'Cedar Apple Rust', 'Healthy Apple',
+    'Potato Early Blight', 'Potato Late Blight', 'Healthy Potato',
+    'Tomato Early Blight', 'Tomato Late Blight', 'Healthy Tomato',
+    'Corn Leaf Spot', 'Healthy Corn'
+]
 
-MODEL_ID = '1ANsJOrCuHeUIB3jVwbCstVcIakak08_e'
-if not os.path.exists(MODEL_PATH):
-    print("Downloading model...")
-    gdown.download(f'https://drive.google.com/uc?id={MODEL_ID}', MODEL_PATH, quiet=False)
+treatments = {
+    'Apple Scab': "Use fungicides such as captan, mancozeb, or myclobutanil. Remove fallen leaves and prune infected areas.",
+    'Apple Black Rot': "Apply copper-based fungicides. Remove infected branches and cankers.",
+    'Cedar Apple Rust': "Use myclobutanil or propiconazole. Remove nearby juniper hosts if possible.",
+    'Healthy Apple': "No treatment needed. Maintain routine watering and pruning.",
 
-model = load_model(MODEL_PATH)
-labels = ['Healthy', 'Disease1', 'Disease2']
+    'Potato Early Blight': "Use fungicides like chlorothalonil or mancozeb. Improve soil drainage and avoid overhead watering.",
+    'Potato Late Blight': "Apply copper-based fungicides immediately. Destroy severely infected plants.",
+    'Healthy Potato': "No treatment required. Continue routine monitoring.",
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
+    'Tomato Early Blight': "Use copper sprays or chlorothalonil. Improve airflow and avoid wetting leaves.",
+    'Tomato Late Blight': "Apply copper fungicide. Remove severely infected plants to prevent spread.",
+    'Healthy Tomato': "Plant is healthy. Keep monitoring moisture and airflow.",
+
+    'Corn Leaf Spot': "Apply fungicides containing azoxystrobin or pyraclostrobin. Rotate crops and avoid dense planting.",
+    'Healthy Corn': "No issues detected. Maintain standard care."
+}
+
+UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 def model_predict(img_path):
     img = image.load_img(img_path, target_size=(224, 224))
-    x = np.expand_dims(image.img_to_array(img) / 255.0, axis=0)
-    preds = model.predict(x)
-    idx = np.argmax(preds[0])
-    label = labels[idx]
-    conf = round(float(preds[0][idx]) * 100, 2)
-    rec = "Water regularly and treat disease if needed."
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0) / 255.0
 
-    plt.figure(figsize=(5, 3))
-    bars = plt.bar(labels, preds[0] * 100, color='lightgreen')
-    bars[idx].set_color('#004d00')
-    plt.ylabel('Confidence %'); plt.title('Prediction Confidence'); plt.ylim(0, 100)
-    gpath = os.path.join(GRAPH_FOLDER, 'plot.png')
-    plt.savefig(gpath); plt.close()
-    return label, conf, rec, gpath
+    preds = model.predict(x)[0]
+    num_classes = len(preds)
+
+    # Ensure class labels match prediction length
+    if len(classes) >= num_classes:
+        labels = classes[:num_classes]
+    else:
+        labels = classes + [f"Class {i+1}" for i in range(len(classes), num_classes)]
+
+    pred_idx = np.argmax(preds)
+    label = labels[pred_idx]
+    conf = round(preds[pred_idx]*100, 2)
+
+    rec = treatments.get(label, "No specific recommendation available.")
+    
+    top_idx = preds.argsort()[-5:][::-1]
+    top_preds = preds[top_idx]*100
+    top_labels = [labels[i] for i in top_idx]
+
+    plt.figure(figsize=(16,10))
+    plt.bar(top_labels, top_preds, color='lightgreen')
+    plt.xticks(rotation=75, ha='right', fontsize=12)
+    plt.ylabel('Confidence (%)', fontsize=14)
+    plt.title('Top Predictions', fontsize=16)
+    plt.tight_layout()
+
+    if not os.path.exists('static'):
+        os.makedirs('static')
+    graph_path = "static/prediction_graph.png"
+    plt.savefig(graph_path)
+    plt.close()
+
+    return label, conf, rec, graph_path
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # 1️⃣ Get uploaded file
+        if 'file' not in request.files:
+            return "No file uploaded!"
         file = request.files['file']
-        if not file:
-            return "No file uploaded", 400
+        if file.filename == '':
+            return "No file selected!"
 
-        # 2️⃣ Save it temporarily
-        filepath = os.path.join('static', 'uploads', file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
 
-        # 3️⃣ Load model (download from Drive if needed)
-        model_path = "model.h5"
-        if not os.path.exists(model_path):
-            gdown.download("https://drive.google.com/uc?id=1ANsJOrCuHeUIB3jVwbCstVcIakak08_e", model_path, quiet=False)
-
-        model = tf.keras.models.load_model(model_path)
-
-        # 4️⃣ Preprocess the image
-        img = cv2.imread(filepath)
-        img = cv2.resize(img, (128, 128))
-        img = img / 255.0
-        img = np.expand_dims(img, axis=0)
-
-        # 5️⃣ Make prediction
-        pred = model.predict(img)
-        result = np.argmax(pred)
-
-        # 6️⃣ Render result page
-        return render_template('result.html', result=result, image=file.filename)
-
-    return render_template('index.html')
-
-@app.route('/how')
-def how():
-    return render_template('how.html')
+        label, conf, rec, graph_path = model_predict(filepath)
+        return render_template("results.html", label=label, conf=conf, rec=rec, graph_path=graph_path)
+    
+    return render_template("index.html")
 
 @app.route('/faq')
 def faq():
-    return render_template('faq.html')
+    return render_template("faq.html")
 
 @app.route('/team')
 def team():
-    return render_template('team.html')
+    return render_template("team.html")
 
-@app.route('/feedback', methods=['GET', 'POST'])
+@app.route('/how')
+def how():
+    return render_template("how.html")
+
+@app.route('/feedback')
 def feedback():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        msg = request.form.get('message')
-        with open("feedback_log.txt", "a", encoding="utf-8") as f:
-            f.write(f"Name: {name}\nEmail: {email}\nMessage: {msg}\n---\n")
-        return render_template('index.html', message=f"✅ Thanks, {name}!")
-    return render_template('feedback.html')
-
-@app.route('/results')
-def results():
-    return render_template('results.html',
-        label=request.args.get('label'),
-        confidence=request.args.get('confidence'),
-        recommendation=request.args.get('recommendation'),
-        filename=request.args.get('filename'),
-        graph_path=request.args.get('graph_path')
-    )
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    file = request.files.get('file')
-    if not file or file.filename == '':
-        return jsonify({'error': 'No file selected'})
-    if not allowed_file(file.filename):
-        return jsonify({'error': 'Allowed: png, jpg, jpeg'})
-
-    fname = secure_filename(file.filename)
-    fpath = os.path.join(UPLOAD_FOLDER, fname)
-    file.save(fpath)
-    label, conf, rec, gpath = model_predict(fpath)
-    return redirect(url_for('results', label=label, confidence=conf,
-                            recommendation=rec, filename=fname, graph_path=gpath))
-
-@app.errorhandler(404)
-def not_found(e):
-    return redirect(url_for('index'))
+    return render_template("feedback.html")
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
