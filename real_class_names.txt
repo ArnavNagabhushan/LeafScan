@@ -1,0 +1,22 @@
+Orange__Haunglongbing_(Citrus_greening)
+Peach__Bacterial_spot
+Peach__healthy
+Pepper,_bell__Bacterial_spot
+Pepper,_bell__healthy
+Potato__Early_blight
+Potato__Late_blight
+Potato__healthy
+Soybean__healthy
+Squash__Powdery_mildew
+Strawberry__Leaf_scorch
+Strawberry__healthy
+Tomato__Bacterial_spot
+Tomato__Early_blight
+Tomato__Late_blight
+Tomato__Leaf_Mold
+Tomato__Septoria_leaf_spot
+Tomato__Spider-mites Two-spotted_spider_mite
+Tomato__Target_Spot
+Tomato__Tomato_Yellow_Leaf_Curl_Virus
+Tomato__Tomato_mosiac_virus
+Tomato__healthy

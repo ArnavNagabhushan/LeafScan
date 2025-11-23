@@ -2,29 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeafScan - Results</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <a href="/" class="logo-link">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo">
+<header>
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="/">🏠 Home</a>
-      <a href="/how">📘 Learn</a>
-      <a href="/results">🧠 Results</a>
-      <a href="/faq">❓ FAQs</a>
-      <a href="/team">👥 Team</a>
-      <a href="/feedback">💬 Feedback</a>
+      <a href="{{ url_for('index') }}">🏠 Home</a>
+      <a href="{{ url_for('how') }}">📘 Learn</a>
+      <a href="{{ url_for('faq') }}">❓ FAQs</a>
+      <a href="{{ url_for('team') }}">👥 Team</a>
+      <a href="{{ url_for('feedback') }}">💬 Feedback</a>
     </nav>
-  </header>
+</header>
 
-  <!-- Results Section -->
-  <section class="section results-section">
+<section class="section results-section">
     <h1>LeafScan</h1>
     <h2>Detecting plant diseases, leaf by leaf</h2>
     <hr>
@@ -35,15 +33,16 @@
     <p><b>Confidence:</b> {{ conf }} %</p>
     <p><b>Recommendation:</b> {{ rec }}</p>
 
-    <img src="{{ graph_path }}" alt="Prediction Graph">
+    <img src="{{ url_for('static', filename=graph_path) }}"
+         alt="Prediction Graph">
 
-    <form action="/">
+    <form action="{{ url_for('index') }}">
       <button type="submit">🔙 Back to Home</button>
     </form>
 
     <hr>
     <p>Made with 💚 by Team B1052JR2</p>
-  </section>
-  
+</section>
+
 </body>
 </html>

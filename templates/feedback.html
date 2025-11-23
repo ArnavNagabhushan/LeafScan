@@ -2,45 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LeafScan - Feedback Submitted</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeafScan - Feedback</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
   <!-- Header -->
   <header>
-    <a href="index.html" class="logo-link">
-      <img src="logo.png" alt="LeafScan Logo">
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="how.html">📘 Learn</a>
-      <a href="results.html">🧠 Results</a>
-      <a href="faq.html">❓ FAQs</a>
-      <a href="team.html">👥 Team</a>
+      <a href="{{ url_for('index') }}">🏠 Home</a>
+      <a href="{{ url_for('how') }}">📘 Learn</a>
+      <a href="{{ url_for('faq') }}">❓ FAQs</a>
+      <a href="{{ url_for('team') }}">👥 Team</a>
+      <a href="{{ url_for('feedback') }}">💬 Feedback</a>
     </nav>
   </header>
 
-  <!-- Feedback Section -->
+  {% if submitted %}
+  <!-- Feedback Submitted Section -->
   <section class="section feedback-section">
-    <h2>Feedback Submitted Successfully!</h2>
+    <h2>✅ Feedback Submitted Successfully!</h2>
     <p>
       Thank you for reaching out to Team LeafScan. Your message has been received and is important to us.
       We value every piece of feedback and strive to improve our platform to better serve farmers, gardeners, and plant enthusiasts.
     </p>
     <p>
       Our team will review your message and get back to you if necessary. In the meantime, feel free to explore our 
-      <a href="faq.html">FAQs</a> or 
-      <a href="how.html">Learn</a> page to discover more about plant health and AI diagnostics.
+      <a href="{{ url_for('faq') }}">FAQs</a> or 
+      <a href="{{ url_for('how') }}">Learn</a> page to discover more about plant health and AI diagnostics.
     </p>
-    <a href="feedback.html">Submit Another Feedback</a>
+    <a href="{{ url_for('feedback') }}">Submit Another Feedback</a>
   </section>
+  {% else %}
+  <!-- Feedback Form Section -->
+  <section class="title-section">
+    <h1>We'd Love Your Feedback</h1>
+    <p>Help us improve LeafScan 🌿</p>
+  </section>
+
+  <section class="section contact-section">
+    <h2>Share Your Thoughts</h2>
+    <form action="{{ url_for('feedback') }}" method="post" id="feedbackForm">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" rows="6" placeholder="Tell us what you think..." required></textarea>
+      
+      <input type="submit" value="Send Feedback">
+    </form>
+  </section>
+  {% endif %}
 
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 LeafScan - Detecting plant diseases, leaf by leaf | Made with 💚 by Team B1052JR2</p>
   </footer>
 
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

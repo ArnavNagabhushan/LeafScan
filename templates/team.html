@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeafScan - Our Team</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -9,16 +10,16 @@
 
   <!-- Header -->
   <header>
-    <a href="index.html" class="logo-link">
-      <img src="static/logo.png" alt="LeafScan Logo">
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="how.html">📘 Learn</a>
-      <a href="results.html">🧠 Results</a>
-      <a href="faq.html">❓ FAQs</a>
-      <a href="feedback.html">💬 Feedback</a>
+      <a href="{{ url_for('index') }}">🏠 Home</a>
+      <a href="{{ url_for('how') }}">📘 Learn</a>
+      <a href="{{ url_for('faq') }}">❓ FAQs</a>
+      <a href="{{ url_for('team') }}">👥 Team</a>
+      <a href="{{ url_for('feedback') }}">💬 Feedback</a>
     </nav>
   </header>
 
@@ -30,7 +31,7 @@
 
   <!-- Team Section -->
   <section class="section team-section">
-    <p>We are Team <b>B1052JR2</b> — the creators of <b>LeafScan.AI</b>!</p>
+    <p>We are Team <b>B1052JR2</b> – the creators of <b>LeafScan.AI</b>!</p>
     <p>Class 9 students passionate about AI, coding, and helping farmers.</p>
 
     <h2>Team Members</h2>
@@ -89,7 +90,7 @@
     <p>We worked together under the <b>AI VidyaSetu 1.0</b> Hackathon, Project: <b>Code for New Bharat</b>.</p>
     <p>Our prototype, <b>LeafScan.AI</b>, was developed using Python (Flask), HTML, and Matplotlib.</p>
 
-    <a href="index.html" class="btn-home">🏠 Back to Home</a>
+    <a href="{{ url_for('index') }}" class="btn-home">🏠 Back to Home</a>
   </section>
 
   <!-- Footer -->

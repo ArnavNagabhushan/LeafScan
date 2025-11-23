@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeafScan - How It Works</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -10,17 +11,16 @@
 
   <!-- Header -->
   <header>
-    <a href="index.html" class="logo-link">
-      <img src="logo.png" alt="LeafScan Logo">
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="how.html">📘 Learn</a>
-      <a href="results.html">🧠 Results</a>
-      <a href="faq.html">❓ FAQs</a>
-      <a href="team.html">👥 Team</a>
-      <a href="feedback.html">💬 Feedback</a>
+      <a href="{{ url_for('index') }}">🏠 Home</a>
+      <a href="{{ url_for('how') }}">📘 Learn</a>
+      <a href="{{ url_for('faq') }}">❓ FAQs</a>
+      <a href="{{ url_for('team') }}">👥 Team</a>
+      <a href="{{ url_for('feedback') }}">💬 Feedback</a>
     </nav>
   </header>
 
@@ -49,4 +49,3 @@
 
 </body>
 </html>
-\]]

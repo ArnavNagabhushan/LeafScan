@@ -24,8 +24,6 @@ if (feedbackForm) {
     if (!name || !email || !message) {
       alert('Please fill in all fields before submitting!');
       return false;
-    } else {
-      alert('Thank you! Your message has been submitted.');
     }
   };
 }

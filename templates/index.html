@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeafScan - Detecting Plant Diseases</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -11,7 +12,7 @@
   <header>
     <div class="logo-section">
       <a href="{{ url_for('index') }}">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       </a>
       <h1>LeafScan</h1>
     </div>
@@ -34,8 +35,11 @@
   <!-- Upload -->
   <section class="upload-section">
     <h2>Upload a Leaf Image</h2>
-    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" accept=".jpg,.jpeg,.png" required>
+    {% if error %}
+      <p style="color: red; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" id="uploadForm">
+      <input type="file" id="fileInput" name="file" accept=".jpg,.jpeg,.png" required>
       <input type="submit" value="Upload & Predict">
     </form>
   </section>
@@ -51,21 +55,20 @@
 
   <!-- Feedback -->
   <section class="section contact-section">
-    <h2>Feedback</h2>
+    <h2>Quick Feedback</h2>
     <form action="{{ url_for('feedback') }}" method="post">
       <input type="text" name="name" placeholder="Your Name" required>
       <input type="email" name="email" placeholder="Your Email" required>
       <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
       <input type="submit" value="Send">
     </form>
-    {% if message %}
-      <p class="success-message">{{ message }}</p>
-    {% endif %}
   </section>
 
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 LeafScan | AI for Greener Futures</p>
   </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

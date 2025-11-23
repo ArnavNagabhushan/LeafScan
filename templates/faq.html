@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeafScan - FAQs</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -10,16 +11,16 @@
 
   <!-- Header -->
   <header>
-    <a href="index.html" class="logo-link">
-      <img src="logo.png" alt="LeafScan Logo">
+    <a href="{{ url_for('index') }}" class="logo-link">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="LeafScan Logo" onerror="this.style.display='none'">
       <span class="site-name">LeafScan</span>
     </a>
     <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="how.html">📘 Learn</a>
-      <a href="results.html">🧠 Results</a>
-      <a href="team.html">👥 Team</a>
-      <a href="feedback.html">💬 Feedback</a>
+      <a href="{{ url_for('index') }}">🏠 Home</a>
+      <a href="{{ url_for('how') }}">📘 Learn</a>
+      <a href="{{ url_for('faq') }}">❓ FAQs</a>
+      <a href="{{ url_for('team') }}">👥 Team</a>
+      <a href="{{ url_for('feedback') }}">💬 Feedback</a>
     </nav>
   </header>
 
@@ -39,7 +40,7 @@
       </li>
       <li>
         <b>Q:</b> What kinds of plants can LeafScan detect diseases for?<br>
-        <b>A:</b> Our model is trained for multiple plants such as tomato, potato, and bell pepper. More crops will be added soon!
+        <b>A:</b> Our model is trained for multiple plants such as tomato, potato, bell pepper, peach, orange, strawberry, and more. We support 22 different plant-disease combinations!
       </li>
       <li>
         <b>Q:</b> What file formats are supported?<br>
