@@ -1,29 +1,24 @@
-from tensorflow.keras.models import load_model
+import os
 
-print("Loading model...")
-model = load_model("model/plant_model.h5", compile=False)
-print("Model loaded.")
+train_dir = "dataset/train"
 
-# Method 1: Check full model output shape
-try:
-    out_shape = model.output_shape
-    print("Model output_shape:", out_shape)
-    if len(out_shape) == 2:
-        print("Number of classes:", out_shape[1])
-    else:
-        print("Model output not flat classification:", out_shape)
-except Exception as e:
-    print("Failed reading model.output_shape:", e)
-
-# Method 2: Directly check output layer node count
-try:
-    last = model.layers[-1]
-    print("\nLast layer:", last.name)
-    config = last.get_config()
-    if "units" in config:
-        print("Last Dense units:", config["units"])
-    else:
-        print("Layer config has no 'units' key. Full config:")
-        print(config)
-except Exception as e:
-    print("Could not inspect last layer:", e)
+if os.path.exists(train_dir):
+    # Get all folder names (these are your classes)
+    folders = sorted([f for f in os.listdir(train_dir) 
+                     if os.path.isdir(os.path.join(train_dir, f))])
+    
+    print(f"Found {len(folders)} classes in dataset/train folder")
+    print("="*60)
+    
+    # Save to file
+    with open("real_class_names.txt", "w", encoding="utf-8") as f:
+        for i, folder in enumerate(folders):
+            f.write(folder + "\n")
+            print(f"{i}: {folder}")
+    
+    print("="*60)
+    print(f"✅ Saved all {len(folders)} class names to real_class_names.txt")
+    
+else:
+    print(f"❌ Folder not found: {train_dir}")
+    print("\nPlease check if your dataset folder exists and contains the train subfolder.")

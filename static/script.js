@@ -1,19 +1,15 @@
-// 🌿 Simple JS Validation for LeafScan
-
-// Upload form
 const uploadForm = document.getElementById('uploadForm');
 const fileInput = document.getElementById('fileInput');
 
 if (uploadForm) {
   uploadForm.onsubmit = function () {
     if (!fileInput.value) {
-      alert('Please select a file before submitting!');
+      alert('Please select a file!');
       return false;
     }
   };
 }
 
-// Feedback form
 const feedbackForm = document.getElementById('feedbackForm');
 if (feedbackForm) {
   feedbackForm.onsubmit = function () {
@@ -22,7 +18,7 @@ if (feedbackForm) {
     const message = document.getElementById('message').value;
 
     if (!name || !email || !message) {
-      alert('Please fill in all fields before submitting!');
+      alert('Please fill all fields!');
       return false;
     }
   };
